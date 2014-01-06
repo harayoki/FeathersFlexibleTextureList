@@ -97,6 +97,7 @@ package
 
 			var factory:FlexibleTextureListFactory = new FlexibleTextureListFactory();
 			factory.verticalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("vertical-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
+			factory.verticalScrollBarThumbSkinColor = 0xffaa99;
 			factory.horizontalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("horizontal-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
 			var list:List = factory.createSimpleList();
 			list.width  = 320;

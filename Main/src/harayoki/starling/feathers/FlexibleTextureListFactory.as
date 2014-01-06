@@ -19,16 +19,17 @@ package harayoki.starling.feathers
 		public var normalIconTexture:Texture;
 		public var selectedIconTexture:Texture;
 		
-		//Scale3Image or DisplayObject or color(uint);
+		//Scale3Image or DisplayObject
 		public var horizontalScrollBarThumbSkinTexture:Object;
+		public var horizontalScrollBarThumbSkinColor:uint = 0xffffff;
 		
-		//Scale3Image or DisplayObject or color(uint);
+		//Scale3Image or DisplayObject
 		public var verticalScrollBarThumbSkinTexture:Object;
+		public var verticalScrollBarThumbSkinColor:uint = 0xffffff;
 		
 		public function FlexibleTextureListFactory(scale:Number=1.0)
 		{
 			this.scale = scale;
-			//defaultTextFormat = DEFAULT_TEXT_FORMAT;
 		}
 		
 		public function createSimpleList():List
@@ -69,9 +70,14 @@ package harayoki.starling.feathers
 			}
 			else
 			{
-				defaultSkin = getColorQuad(horizontalScrollBarThumbSkinTexture is uint ? verticalScrollBarThumbSkinTexture as uint : 0xffffff);
+				defaultSkin = getColorQuad();
 				defaultSkin.height = 10 * scale;
 			}
+			if(defaultSkin.hasOwnProperty("color"))
+			{
+				defaultSkin["color"] = horizontalScrollBarThumbSkinColor;
+			}
+
 			defaultSkin.width = 10 * scale;
 			scrollBar.thumbProperties.defaultSkin = defaultSkin;
 			scrollBar.paddingRight = scrollBar.paddingBottom = scrollBar.paddingLeft = 4 * scale;
@@ -93,9 +99,14 @@ package harayoki.starling.feathers
 			}
 			else
 			{
-				defaultSkin = getColorQuad(verticalScrollBarThumbSkinTexture is uint ? verticalScrollBarThumbSkinTexture as uint : 0xffffff);
+				defaultSkin = getColorQuad();
 				defaultSkin.width = 10 * scale;
 			}
+			if(defaultSkin.hasOwnProperty("color"))
+			{
+				defaultSkin["color"] = verticalScrollBarThumbSkinColor;
+			}
+			
 			defaultSkin.height = 10 * scale;
 			scrollBar.thumbProperties.defaultSkin = defaultSkin;
 			scrollBar.paddingTop = scrollBar.paddingRight = scrollBar.paddingBottom = 4 * scale;
