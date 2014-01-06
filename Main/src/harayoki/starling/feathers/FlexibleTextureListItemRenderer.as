@@ -9,19 +9,22 @@ package harayoki.starling.feathers
 	import feathers.core.FeathersControl;
 	import feathers.core.ITextRenderer;
 	
-	import starling.display.Quad;
+	import starling.display.Image;
 	import starling.events.Event;
 	import starling.textures.Texture;
 	
 	public class FlexibleTextureListItemRenderer extends FeathersControl implements IListItemRenderer
 	{
 		public static const CHILD_NAME_FLEXIBLE_TEXTURE_LIST:String = "flexibleTextureList";
+		protected static var DEFAULT_TEXTURE:Texture;
 		
-		public var normalIconTexture:Texture;
-		public var selectedIconTexture:Texture;
+		public var textureSelecter:Function;
+		public var defaultTexture:Texture;
 		
 		public function FlexibleTextureListItemRenderer()
 		{
+			if(!DEFAULT_TEXTURE) DEFAULT_TEXTURE = Texture.fromColor(100,100,0xffffffff);
+			defaultTexture = DEFAULT_TEXTURE;
 		}
 		
 		protected var _data:Object;	
@@ -191,12 +194,12 @@ package harayoki.starling.feathers
 		
 		//////////
 		
-		protected var background:Quad;
+		protected var background:Image;
 		protected var label:Label;
 		
 		override protected function initialize():void
 		{
-			background = new Quad(100, 100, 0xffffff);
+			background = new Image(defaultTexture);
 			background.alpha = 1.0;
 			addChild(this.background);
 			
@@ -253,12 +256,23 @@ package harayoki.starling.feathers
 		
 		protected function commitData():void
 		{
-			if(this._owner)
+			if(_owner)
 			{
 				label.text = data.label;
 				trace(label.text);
+				
+				var texture:Texture = defaultTexture;
+				var index:int = _owner.dataProvider.getItemIndex(data);
+				if(textureSelecter != null)
+				{
+					texture = textureSelecter.apply(null,[data,index]) || texture;
+				}
+				if(background.texture != texture)
+				{
+					background.texture = texture;
+				}
 				//this.icon.source = _isSelected ? this._firstSelectedIconTexture : this._firstNormalIconTexture;
-				background.color = _index % 2 == 0 ? 0xffcccc : 0xccffcc;
+				//background.color = _index % 2 == 0 ? 0xffcccc : 0xccffcc;
 			}
 			else
 			{

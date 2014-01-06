@@ -16,9 +16,6 @@ package harayoki.starling.feathers
 		//protected static const DEFAULT_TEXT_FORMAT:TextFormat = new TextFormat("_sans", 24, 0x333333);
 		protected var scale:Number = 1.0;
 		
-		public var normalIconTexture:Texture;
-		public var selectedIconTexture:Texture;
-		
 		//Scale3Image or DisplayObject
 		public var horizontalScrollBarThumbSkinTexture:Object;
 		public var horizontalScrollBarThumbSkinColor:uint = 0xffffff;
@@ -32,7 +29,7 @@ package harayoki.starling.feathers
 			this.scale = scale;
 		}
 		
-		public function createSimpleList():List
+		public function createSimpleList(textureSelecter:Function=null):List
 		{
 					
 			var list:List = new List();
@@ -46,8 +43,7 @@ package harayoki.starling.feathers
 				renderer.paddingRight = 32 * scale
 				renderer.paddingBottom = 0 * scale;
 				renderer.paddingLeft = 44 * scale;
-				renderer.normalIconTexture = normalIconTexture;
-				renderer.selectedIconTexture = selectedIconTexture;
+				renderer.textureSelecter = textureSelecter;
 				renderer.height = 75;
 				return renderer;
 			};
