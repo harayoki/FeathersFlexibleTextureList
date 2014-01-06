@@ -7,6 +7,7 @@ package harayoki.starling.feathers
 	import feathers.textures.Scale3Textures;
 	
 	import starling.display.DisplayObject;
+	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.textures.Texture;
 
@@ -17,8 +18,12 @@ package harayoki.starling.feathers
 		
 		public var normalIconTexture:Texture;
 		public var selectedIconTexture:Texture;
-		public var horizontalScrollBarThumbSkinTextures:Scale3Textures;
-		public var verticalScrollBarThumbSkinTextures:Scale3Textures;
+		
+		//Scale3Image or DisplayObject or color(uint);
+		public var horizontalScrollBarThumbSkinTexture:Object;
+		
+		//Scale3Image or DisplayObject or color(uint);
+		public var verticalScrollBarThumbSkinTexture:Object;
 		
 		public function FlexibleTextureListFactory(scale:Number=1.0)
 		{
@@ -26,7 +31,7 @@ package harayoki.starling.feathers
 			//defaultTextFormat = DEFAULT_TEXT_FORMAT;
 		}
 		
-		public function createBasic():List
+		public function createSimpleList():List
 		{
 					
 			var list:List = new List();
@@ -54,13 +59,18 @@ package harayoki.starling.feathers
 			const scrollBar:SimpleScrollBar = new SimpleScrollBar();
 			scrollBar.direction = SimpleScrollBar.DIRECTION_HORIZONTAL;
 			var defaultSkin:DisplayObject;
-			if(horizontalScrollBarThumbSkinTextures)
+			if(horizontalScrollBarThumbSkinTexture is Scale3Textures)
 			{
-				defaultSkin = new Scale3Image(horizontalScrollBarThumbSkinTextures, scale);
+				defaultSkin = new Scale3Image(Scale3Textures(horizontalScrollBarThumbSkinTexture), scale);
+			}
+			else if(horizontalScrollBarThumbSkinTexture is Texture)
+			{
+				defaultSkin = new Image(Texture(horizontalScrollBarThumbSkinTexture));
 			}
 			else
 			{
-				defaultSkin = getColorQuad();
+				defaultSkin = getColorQuad(horizontalScrollBarThumbSkinTexture is uint ? verticalScrollBarThumbSkinTexture as uint : 0xffffff);
+				defaultSkin.height = 10 * scale;
 			}
 			defaultSkin.width = 10 * scale;
 			scrollBar.thumbProperties.defaultSkin = defaultSkin;
@@ -73,13 +83,18 @@ package harayoki.starling.feathers
 			const scrollBar:SimpleScrollBar = new SimpleScrollBar();
 			scrollBar.direction = SimpleScrollBar.DIRECTION_VERTICAL;
 			var defaultSkin:DisplayObject;
-			if(verticalScrollBarThumbSkinTextures)
+			if(verticalScrollBarThumbSkinTexture is Scale3Textures)
 			{
-				defaultSkin = new Scale3Image(this.verticalScrollBarThumbSkinTextures, scale);
+				defaultSkin = new Scale3Image(Scale3Textures(verticalScrollBarThumbSkinTexture), scale);
+			}
+			else if(verticalScrollBarThumbSkinTexture is Texture)
+			{
+				defaultSkin = new Image(Texture(verticalScrollBarThumbSkinTexture));
 			}
 			else
 			{
-				defaultSkin = getColorQuad();
+				defaultSkin = getColorQuad(verticalScrollBarThumbSkinTexture is uint ? verticalScrollBarThumbSkinTexture as uint : 0xffffff);
+				defaultSkin.width = 10 * scale;
 			}
 			defaultSkin.height = 10 * scale;
 			scrollBar.thumbProperties.defaultSkin = defaultSkin;

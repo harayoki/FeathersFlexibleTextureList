@@ -7,12 +7,14 @@ package
 	
 	import feathers.controls.List;
 	import feathers.data.ListCollection;
+	import feathers.textures.Scale3Textures;
 	
 	import harayoki.starling.feathers.FlexibleTextureListFactory;
 	
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.utils.AssetManager;
 	import starling.utils.RectangleUtil;
 	import starling.utils.ScaleMode;
 	
@@ -22,6 +24,8 @@ package
 		private static const CONTENTS_HEIGHT:int = 640;
 		private static var _starling:Starling;
 		private static var _flashStage:Stage;
+		
+		private var _assetManager:AssetManager;
 		
 		private const CONTENT:Array = [
 		   	 { label: "ドラえもん",		data: null }
@@ -60,16 +64,7 @@ package
 			stage.addEventListener(Event.RESIZE,_handleStageResize);
 			_starling.start();		
 			
-			
-			var list:List = new FlexibleTextureListFactory().createBasic();
-			list.width  = 320;
-			list.height = 480;
-			list.x      = 10;
-			list.y      = 10;
-			list.dataProvider = new ListCollection(CONTENT);
-			addChild(list);
-			
-			list.addEventListener(Event.CHANGE, _handleChangeListItem);
+			_loadAssets();
 		}
 		
 		private function _handleStageResize(ev:Event):void
@@ -80,6 +75,38 @@ package
 				new Rectangle(0, 0, CONTENTS_WIDTH, CONTENTS_HEIGHT),
 				new Rectangle(0, 0, w,h),
 				ScaleMode.SHOW_ALL);			
+		}
+		
+		private function _loadAssets():void
+		{
+			_assetManager = new AssetManager();
+			_assetManager.verbose = true;
+			_assetManager.enqueue("traintimes.png");
+			_assetManager.enqueue("traintimes.xml");
+			_assetManager.loadQueue(function(num:Number):void{
+				if(num==1.0)
+				{
+					_start();
+				}
+			});
+		}
+		private function _start():void
+		{
+			const SCROLL_BAR_THUMB_REGION1:int = 5;
+			const SCROLL_BAR_THUMB_REGION2:int = 14;
+
+			var factory:FlexibleTextureListFactory = new FlexibleTextureListFactory();
+			factory.verticalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("vertical-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
+			factory.horizontalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("horizontal-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
+			var list:List = factory.createSimpleList();
+			list.width  = 320;
+			list.height = 480;
+			list.x      = 10;
+			list.y      = 10;
+			list.dataProvider = new ListCollection(CONTENT);
+			addChild(list);
+			
+			list.addEventListener(Event.CHANGE, _handleChangeListItem);			
 		}
 		
 		private function _handleChangeListItem(event:Event):void {

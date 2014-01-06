@@ -14,4 +14,11 @@
 	<natures>
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>[source path] items</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/items</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
