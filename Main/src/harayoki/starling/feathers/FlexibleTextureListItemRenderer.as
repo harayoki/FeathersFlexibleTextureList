@@ -1,6 +1,5 @@
 package harayoki.starling.feathers
 {
-	import flash.display.Bitmap;
 	import flash.text.TextFormat;
 	
 	import feathers.controls.Label;
@@ -12,6 +11,7 @@ package harayoki.starling.feathers
 	import feathers.core.ITextRenderer;
 	import feathers.text.BitmapFontTextFormat;
 	
+	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.textures.Texture;
@@ -21,8 +21,7 @@ package harayoki.starling.feathers
 		protected static var DEFAULT_TEXTURE:Texture;//ここでnewするとStage3Dが準備できていないのでエラーになります
 		protected static const DEFAULT_TEXT_FORMAT:TextFormat = new TextFormat("_sans",24,0x111111);
 		
-		public var textureSelecter:Function;
-		public var defaultTexture:Texture;
+		public var backgroundSelecter:Function;
 		
 		public var useBitmapFont:Boolean = false;
 		public var textFormat:TextFormat;
@@ -30,10 +29,23 @@ package harayoki.starling.feathers
 		
 		public function FlexibleTextureListItemRenderer()
 		{
+			//このインスタンスはリストのアイテム数分だけ作成されます
+			
 			if(!DEFAULT_TEXTURE)
 			{
-				DEFAULT_TEXTURE = Texture.fromColor(32,32,0xff111111);
+				DEFAULT_TEXTURE = Texture.fromColor(32,32,0xff555555);
 			}
+		}
+		
+		public override function dispose():void
+		{
+			//list.dispose()時に呼ばれます
+			_data = null;
+			backgroundSelecter = null;
+			textFormat = null;
+			bitmapTextFormat = null;
+			_owner = null;
+			super.dispose();
 		}
 		
 		protected var _data:Object;	
@@ -203,18 +215,13 @@ package harayoki.starling.feathers
 		
 		//////////
 		
-		protected var background:Image;
+		protected var background:DisplayObject;
 		protected var label:Label;
 		
 		override protected function initialize():void
 		{
-			defaultTexture = defaultTexture ? defaultTexture : DEFAULT_TEXTURE;;
 			var textFormat:TextFormat = this.textFormat ? this.textFormat : DEFAULT_TEXT_FORMAT;
-			
-			background = new Image(defaultTexture);
-			background.alpha = 1.0;
-			addChild(this.background);
-			
+						
 			label = new Label();
 			label.textRendererFactory = function():ITextRenderer
 			{
@@ -278,17 +285,30 @@ package harayoki.starling.feathers
 			if(_owner)
 			{
 				label.text = data.label;
-				trace(label.text);
 				
-				var texture:Texture = defaultTexture;
 				var index:int = _owner.dataProvider.getItemIndex(data);
-				if(textureSelecter != null)
+				var newBackground:DisplayObject;
+				if(backgroundSelecter != null)
 				{
-					texture = textureSelecter.apply(null,[data]) || texture;
+					newBackground = backgroundSelecter.apply(null,[_owner,data]);
 				}
-				if(background.texture != texture)
+				if(background == null && newBackground == null)
 				{
-					background.texture = texture;
+					newBackground = new Image(DEFAULT_TEXTURE);
+				}
+				if(newBackground && newBackground != background)
+				{
+					if(background)
+					{
+						addChildAt(newBackground,getChildIndex(background));
+						background.removeFromParent();
+						background = newBackground
+					}
+					else
+					{
+						addChildAt(newBackground,0);
+						background = newBackground;
+					}
 				}
 			}
 			else

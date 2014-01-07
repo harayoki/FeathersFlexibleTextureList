@@ -5,6 +5,7 @@ package
 	import flash.display.StageScaleMode;
 	import flash.geom.Rectangle;
 	import flash.text.TextFormat;
+	import flash.utils.setTimeout;
 	
 	import feathers.controls.List;
 	import feathers.data.ListCollection;
@@ -28,17 +29,17 @@ package
 		private var _assetManager:AssetManager;
 		
 		private const CONTENT:Array = [
-		   	 { label: "ドラえもん",		data: null }
-			,{ label: "パーマン",     	data: null }
-			,{ label: "オバケのQ太郎", 	data: null }
-			,{ label: "(新)オバケのQ太郎", data: null }
-			,{ label: "怪物君",       	data: null ,texture:"bg_b_320x64"}
-			,{ label: "忍者ハットリ君", 	data: null ,texture:"bg_b_320x64"}
-			,{ label: "キテレツ大百科", 	data: null }
-			,{ label: "プロゴルファー猿",	data: null ,texture:"bg_b_320x64"}
-			,{ label: "エスパー魔美",  	data: null }
-			,{ label: "チンプイ",   		data: null }
-			,{ label: "21エモン",   		data: null }
+		   	 { label: "ドラえもん"		}
+			,{ label: "パーマン"     	}
+			,{ label: "オバケのQ太郎" 	}
+			,{ label: "(新)オバケのQ太郎" }
+			,{ label: "怪物君", texture:"bg_b_320x64"}
+			,{ label: "忍者ハットリ君", texture:"bg_b_320x64"}
+			,{ label: "キテレツ大百科"}
+			,{ label: "プロゴルファー猿", texture:"bg_b_320x64"}
+			,{ label: "エスパー魔美"}
+			,{ label: "チンプイ"}
+			,{ label: "21エモン"}
 		];
 		
 		public static function main(stage:Stage):void
@@ -99,7 +100,7 @@ package
 			factory.applyVscrollbarByAssetManager(_assetManager);
 			factory.applyHscrollbarByAssetManager(_assetManager);
 			factory.setTextureSelecterByAssetManager(_assetManager);
-			factory.defaultTexture = _assetManager.getTexture("bg_a_320x64");
+			factory.defaultBackgroundTexture = _assetManager.getTexture("bg_a_320x64");
 			
 			var list:List = factory.createSimpleList();
 			list.width  = 460;
@@ -109,7 +110,14 @@ package
 			list.dataProvider = new ListCollection(CONTENT);
 			addChild(list);
 			
-			list.addEventListener(Event.CHANGE, _handleChangeListItem);			
+			list.addEventListener(Event.CHANGE, _handleChangeListItem);		
+			
+			flash.utils.setTimeout(function():void{
+				// for test
+				//list.removeFromParent();
+				//list.dispose();			
+			},3000);
+						
 		}
 		
 		private function _handleChangeListItem(event:Event):void {

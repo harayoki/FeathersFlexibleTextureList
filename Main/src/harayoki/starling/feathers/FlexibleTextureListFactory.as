@@ -1,6 +1,7 @@
 package harayoki.starling.feathers
 {
 	import flash.text.TextFormat;
+	import flash.utils.Dictionary;
 	
 	import feathers.controls.List;
 	import feathers.controls.SimpleScrollBar;
@@ -18,14 +19,12 @@ package harayoki.starling.feathers
 	public class FlexibleTextureListFactory
 	{
 		//protected static const DEFAULT_TEXT_FORMAT:TextFormat = new TextFormat("_sans", 24, 0x333333);
-		protected var scale:Number = 1.0;
+		protected var _scale:Number = 1.0;
 		
-		//Scale3Image or DisplayObject
-		public var hScrollBarThumbSkinTexture:Object;
+		public var hScrollBarThumbSkinTexture:Scale3Textures;
 		public var hScrollBarThumbSkinColor:uint = 0xffffff;
 		
-		//Scale3Image or DisplayObject
-		public var vScrollBarThumbSkinTexture:Object;
+		public var vScrollBarThumbSkinTexture:Scale3Textures;
 		public var vScrollBarThumbSkinColor:uint = 0xffffff;
 		
 		public var textFormat:TextFormat = null;
@@ -33,31 +32,46 @@ package harayoki.starling.feathers
 		
 		public var listItemHeight:int = 80;
 		
-		public var defaultTexture:Texture;
+		public var defaultBackgroundTexture:Texture;
 		
-		public var textureSelecter:Function;
+		public var backgroundSelecter:Function;
 		
 		public function FlexibleTextureListFactory(scale:Number=1.0)
 		{
-			this.scale = scale;
+			_scale = scale;
+		}
+		
+		public function dispose():void
+		{
+			backgroundSelecter = null;
+			defaultBackgroundTexture = null;
+			textFormat = null;
+			bitmapFontTextFormat = null;
+			hScrollBarThumbSkinTexture = null;
+			vScrollBarThumbSkinTexture = null;
 		}
 		
 		public function createSimpleList():List
 		{
 			
-			var list:List = new List();
+			var list:List;
+			
+			var onDispose:Function = function():void
+			{
+			}
+			
+			list = new FlexibleTextureList(onDispose);
 			list.horizontalScrollBarFactory = horizontalScrollBarFactory;
 			list.verticalScrollBarFactory = verticalScrollBarFactory;			
-						
 			list.itemRendererFactory = function():IListItemRenderer {
-				var renderer:FlexibleTextureListItemRenderer = new FlexibleTextureListItemRenderer();
-				renderer.paddingTop = 0 * scale
-				renderer.paddingRight = 32 * scale
-				renderer.paddingBottom = 0 * scale;
-				renderer.paddingLeft = 44 * scale;
-				renderer.textureSelecter = textureSelecter;
+				var renderer:FlexibleTextureListItemRenderer;
+				renderer = new FlexibleTextureListItemRenderer();
+				renderer.paddingTop = 0 * _scale
+				renderer.paddingRight = 32 * _scale
+				renderer.paddingBottom = 0 * _scale;
+				renderer.paddingLeft = 44 * _scale;
+				renderer.backgroundSelecter = backgroundSelecter;
 				renderer.height = listItemHeight;
-				renderer.defaultTexture = defaultTexture;
 				
 				if(bitmapFontTextFormat)
 				{
@@ -88,10 +102,24 @@ package harayoki.starling.feathers
 		
 		public function setTextureSelecterByAssetManager(_assetManager:AssetManager,dataName:String="texture"):void
 		{
-			textureSelecter = function(data:Object):Texture{
+			backgroundSelecter = function(list:List,data:Object):DisplayObject{
+				var flexList:FlexibleTextureList = FlexibleTextureList(list);
+				var img:Image = flexList._autoCreatedImages[data];
+				var texture:Texture;
+				if(img) return img;
 				var textureName:String = data[dataName];
-				if(!textureName) return null;
-				return _assetManager.getTexture(textureName);
+				if(textureName) 
+				{
+					texture = _assetManager.getTexture(textureName);					
+				}
+				else
+				{
+					texture = defaultBackgroundTexture;
+				}
+				if(!texture) return null;
+				img = flexList._autoCreatedImages[data] = new Image(texture);
+				//trace(data["label"],img);
+				return img;
 			}
 		}
 		
@@ -100,27 +128,23 @@ package harayoki.starling.feathers
 			const scrollBar:SimpleScrollBar = new SimpleScrollBar();
 			scrollBar.direction = SimpleScrollBar.DIRECTION_HORIZONTAL;
 			var defaultSkin:DisplayObject;
-			if(hScrollBarThumbSkinTexture is Scale3Textures)
+			if(hScrollBarThumbSkinTexture)
 			{
-				defaultSkin = new Scale3Image(Scale3Textures(hScrollBarThumbSkinTexture), scale);
-			}
-			else if(hScrollBarThumbSkinTexture is Texture)
-			{
-				defaultSkin = new Image(Texture(hScrollBarThumbSkinTexture));
+				defaultSkin = new Scale3Image(Scale3Textures(hScrollBarThumbSkinTexture), _scale);
 			}
 			else
 			{
 				defaultSkin = getColorQuad();
-				defaultSkin.height = 10 * scale;
+				defaultSkin.height = 10 * _scale;
 			}
 			if(defaultSkin.hasOwnProperty("color"))
 			{
 				defaultSkin["color"] = hScrollBarThumbSkinColor;
 			}
 
-			defaultSkin.width = 10 * scale;
+			defaultSkin.width = 10 * _scale;
 			scrollBar.thumbProperties.defaultSkin = defaultSkin;
-			scrollBar.paddingRight = scrollBar.paddingBottom = scrollBar.paddingLeft = 4 * scale;
+			scrollBar.paddingRight = scrollBar.paddingBottom = scrollBar.paddingLeft = 4 * _scale;
 			return scrollBar;
 		}
 		
@@ -129,27 +153,23 @@ package harayoki.starling.feathers
 			const scrollBar:SimpleScrollBar = new SimpleScrollBar();
 			scrollBar.direction = SimpleScrollBar.DIRECTION_VERTICAL;
 			var defaultSkin:DisplayObject;
-			if(vScrollBarThumbSkinTexture is Scale3Textures)
+			if(vScrollBarThumbSkinTexture)
 			{
-				defaultSkin = new Scale3Image(Scale3Textures(vScrollBarThumbSkinTexture), scale);
-			}
-			else if(vScrollBarThumbSkinTexture is Texture)
-			{
-				defaultSkin = new Image(Texture(vScrollBarThumbSkinTexture));
+				defaultSkin = new Scale3Image(Scale3Textures(vScrollBarThumbSkinTexture), _scale);
 			}
 			else
 			{
 				defaultSkin = getColorQuad();
-				defaultSkin.width = 10 * scale;
+				defaultSkin.width = 10 * _scale;
 			}
 			if(defaultSkin.hasOwnProperty("color"))
 			{
 				defaultSkin["color"] = vScrollBarThumbSkinColor;
 			}
 			
-			defaultSkin.height = 10 * scale;
+			defaultSkin.height = 10 * _scale;
 			scrollBar.thumbProperties.defaultSkin = defaultSkin;
-			scrollBar.paddingTop = scrollBar.paddingRight = scrollBar.paddingBottom = 4 * scale;
+			scrollBar.paddingTop = scrollBar.paddingRight = scrollBar.paddingBottom = 4 * _scale;
 			return scrollBar;
 		}
 		
@@ -157,5 +177,35 @@ package harayoki.starling.feathers
 		{
 			return new Quad(32,32,color);
 		}
+	}
+}
+import flash.utils.Dictionary;
+
+import feathers.controls.List;
+
+import starling.display.Image;
+
+internal class FlexibleTextureList extends List
+{
+	protected var _onDispose:Function;
+	internal var _autoCreatedImages:Dictionary = new Dictionary();
+	public function FlexibleTextureList(onDispose:Function)
+	{
+		_onDispose = onDispose;
+		super();
+	}
+	
+	public override function dispose():void
+	{
+		if(_autoCreatedImages)
+		{
+			for each(var img:Image in _autoCreatedImages)
+			{
+				img.dispose();
+			}
+		}
+		_autoCreatedImages = null;
+		_onDispose.apply(null);
+		super.dispose();
 	}
 }
