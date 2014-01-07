@@ -108,7 +108,8 @@ package harayoki.starling.feathers
 		
 		public function setTextureSelecterByAssetManager(_assetManager:AssetManager,dataName:String="texture"):void
 		{
-			backgroundSelecter = function(list:List,data:Object,info:FlexibleTextureListItemInfo):DisplayObject{
+			backgroundSelecter = function(list:List,data:Object,info:FlexibleTextureListItemInfo):DisplayObject
+			{
 				var flexList:FlexibleTextureList = FlexibleTextureList(list);
 				var img:Image = flexList._autoCreatedImages[data];
 				var texture:Texture;
@@ -126,17 +127,20 @@ package harayoki.starling.feathers
 					if(!texture) return null;
 					img = flexList._autoCreatedImages[data] = new Image(texture);
 				}
-				if(info.touching)
+				if(img)
 				{
-					img.color = touchColor;
-				}
-				else if(info.selected)
-				{
-					img.color = selectColor;
-				}
-				else
-				{
-					img.color = normalColor;
+					if(info.touching)
+					{
+						img.color = touchColor;
+					}
+					else if(info.selected)
+					{
+						img.color = selectColor;
+					}
+					else
+					{
+						img.color = normalColor;
+					}
 				}
 				//trace(data["label"],img);
 				return img;
