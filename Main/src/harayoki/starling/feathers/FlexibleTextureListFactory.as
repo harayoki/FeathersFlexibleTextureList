@@ -18,6 +18,7 @@ package harayoki.starling.feathers
 	/**
 	 * 各アイテム(行)のテクスチャを柔軟に指定してリストを作成するクラス
 	 * @author haruyuki.imai
+	 * ※ StarlingのAssetManagerと組み合わせると楽に使う事ができます
 	 */
 	public class FlexibleTextureListFactory
 	{

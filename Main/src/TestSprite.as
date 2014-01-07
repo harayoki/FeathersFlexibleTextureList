@@ -9,6 +9,7 @@ package
 	
 	import feathers.controls.List;
 	import feathers.data.ListCollection;
+	import feathers.text.BitmapFontTextFormat;
 	
 	import harayoki.starling.feathers.FlexibleTextureListFactory;
 	
@@ -19,6 +20,11 @@ package
 	import starling.utils.RectangleUtil;
 	import starling.utils.ScaleMode;
 	
+	/**
+	 * リスト動作サンプル メイン
+	 * _startメソッド内がサンプルとして主となる箇所
+	 * @author haruyuki.imai
+	 */
 	public class TestSprite extends Sprite
 	{
 		private static const CONTENTS_WIDTH:int = 480;
@@ -42,6 +48,9 @@ package
 			,{ label: "21エモン"}
 		];
 		
+		/**
+		 * ここから動作スタート
+		 */
 		public static function main(stage:Stage):void
 		{
 			_flashStage = stage;
@@ -93,16 +102,41 @@ package
 				}
 			});
 		}
+		
 		private function _start():void
 		{
+			var list:List;
+			
+			//factory経由でリストを手に入れます
 			var factory:FlexibleTextureListFactory = new FlexibleTextureListFactory();
+			
+			//フォルトの背景テクスチャを設定 テクスチャ指定は全ての行をdataProvider経由で行っても良い
 			factory.defaultBackgroundTexture = _assetManager.getTexture("bg_a_320x64");
+			
+			//(任意の処理) テキストフォーマットを指定
 			factory.textFormat = new TextFormat("_sans",24,0x331111,true);
+			
+			//(任意の処理) BitmapFontの使用も可能
+			//factory.bitmapFontTextFormat = new BitmapFontTextFormat(....
+			
+			//縦横のスクロールバーをいい感じに指定(テクスチャアトラス名とサイズは決めうちされてます)
 			factory.useDefaultScrollbarAssets(_assetManager);
+			
+			//自前でスクロールバー指定する場合の例
+			//factory.vScrollBarThumbSkinTexture = new Scale3Textures(....
+			
+			//背景をいい感じに管理してくれるようにする
+			//この仕組みを使った場合、デフォルトのテクスチャ以外は、dataProvider経由(CONTENT)内で行なう
 			factory.useDefaultBackgroundDisplayObjectSelecter(_assetManager);
+			
+			//(任意の処理) 選択アイテムのカラー 通常カラーやタッチ時のカラー指定も可能
 			factory.selectColor = 0xffcccc;
 			
-			var list:List = factory.createSimpleList();
+			//ここで実際にリストを作成
+			list = factory.createSimpleList();
+			
+			////////// ここから先は通常のリストの扱いと同じ //////////
+			
 			list.width  = 460;
 			list.height = 620;
 			list.x      = 10;
@@ -110,20 +144,20 @@ package
 			list.dataProvider = new ListCollection(CONTENT);
 			addChild(list);
 			
-			list.addEventListener(Event.CHANGE, _handleChangeListItem);		
+			list.addEventListener(Event.CHANGE, handleChangeListItem);		
 			
-			flash.utils.setTimeout(function():void{
-				// for test
-				//list.removeFromParent();
-				//list.dispose();			
-			},3000);
+			//// test用
+			//flash.utils.setTimeout(function():void{
+			//	list.removeFromParent();
+			//	list.dispose();			
+			//},3000);
 						
-		}
-		
-		private function _handleChangeListItem(event:Event):void {
-			var list:List = List(event.currentTarget);
-			var item:Object = list.selectedItem;
-			trace("selected:",item.label);
+			function handleChangeListItem(event:Event):void {
+				var list:List = List(event.currentTarget);
+				var item:Object = list.selectedItem;
+				trace("selected:",item.label);
+			}
+			
 		}
 	}
 }
