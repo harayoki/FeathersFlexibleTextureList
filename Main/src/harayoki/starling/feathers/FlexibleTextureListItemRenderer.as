@@ -30,7 +30,7 @@ package harayoki.starling.feathers
 		protected var _touchPointID:int = -1;
 		protected var _info:FlexibleTextureListItemInfo;
 		
-		public var backgroundSelecter:Function;
+		public var backgroundDisplayObjectSelecter:Function;
 		
 		public var useBitmapFont:Boolean = false;
 		public var textFormat:TextFormat;
@@ -53,7 +53,7 @@ package harayoki.starling.feathers
 			//list.dispose()時に呼ばれます
 			removeEventListener(TouchEvent.TOUCH, touchHandler);			
 			_data = null;
-			backgroundSelecter = null;
+			backgroundDisplayObjectSelecter = null;
 			textFormat = null;
 			bitmapTextFormat = null;
 			if(_owner)
@@ -406,11 +406,11 @@ package harayoki.starling.feathers
 				
 				var index:int = _owner.dataProvider.getItemIndex(data);
 				var newBackground:DisplayObject;
-				if(backgroundSelecter != null)
+				if(backgroundDisplayObjectSelecter != null)
 				{
 					_info.touching = _isTouching;
 					_info.selected = _isSelected;
-					newBackground = backgroundSelecter.apply(null,[_owner,data,_info]);
+					newBackground = backgroundDisplayObjectSelecter.apply(null,[_owner,data,_info]);
 				}
 				if(background == null && newBackground == null)
 				{

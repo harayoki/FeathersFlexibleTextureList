@@ -96,12 +96,11 @@ package
 		private function _start():void
 		{
 			var factory:FlexibleTextureListFactory = new FlexibleTextureListFactory();
-			factory.textFormat = new TextFormat("_sans",24,0x331111,true);
-			factory.applyVscrollbarByAssetManager(_assetManager);
-			factory.applyHscrollbarByAssetManager(_assetManager);
-			factory.setTextureSelecterByAssetManager(_assetManager);
-			factory.selectColor = 0xffcccc;
 			factory.defaultBackgroundTexture = _assetManager.getTexture("bg_a_320x64");
+			factory.textFormat = new TextFormat("_sans",24,0x331111,true);
+			factory.useDefaultScrollbarAssets(_assetManager);
+			factory.useDefaultBackgroundDisplayObjectSelecter(_assetManager);
+			factory.selectColor = 0xffcccc;
 			
 			var list:List = factory.createSimpleList();
 			list.width  = 460;
