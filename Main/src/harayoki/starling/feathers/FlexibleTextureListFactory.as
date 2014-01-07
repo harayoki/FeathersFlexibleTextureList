@@ -31,7 +31,9 @@ package harayoki.starling.feathers
 		public var textFormat:TextFormat = null;
 		public var bitmapFontTextFormat:BitmapFontTextFormat = null;
 		
-		public var listItemHeight:int = 64;
+		public var listItemHeight:int = 80;
+		
+		public var defaultTexture:Texture;
 		
 		public var textureSelecter:Function;
 		
@@ -55,6 +57,7 @@ package harayoki.starling.feathers
 				renderer.paddingLeft = 44 * scale;
 				renderer.textureSelecter = textureSelecter;
 				renderer.height = listItemHeight;
+				renderer.defaultTexture = defaultTexture;
 				
 				if(bitmapFontTextFormat)
 				{
@@ -81,6 +84,15 @@ package harayoki.starling.feathers
 		public function applyHscrollbarByAssetManager(assetmanager:AssetManager,textureName:String="hscrollbar",region1:int=8,region2:int=8):void
 		{
 			hScrollBarThumbSkinTexture = new Scale3Textures(assetmanager.getTexture(textureName),region1,region2,Scale3Textures.DIRECTION_HORIZONTAL);
+		}
+		
+		public function setTextureSelecterByAssetManager(_assetManager:AssetManager,dataName:String="texture"):void
+		{
+			textureSelecter = function(data:Object):Texture{
+				var textureName:String = data[dataName];
+				if(!textureName) return null;
+				return _assetManager.getTexture(textureName);
+			}
 		}
 		
 		protected function horizontalScrollBarFactory():SimpleScrollBar

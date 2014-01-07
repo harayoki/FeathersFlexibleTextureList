@@ -8,14 +8,12 @@ package
 	
 	import feathers.controls.List;
 	import feathers.data.ListCollection;
-	import feathers.textures.Scale3Textures;
 	
 	import harayoki.starling.feathers.FlexibleTextureListFactory;
 	
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.textures.Texture;
 	import starling.utils.AssetManager;
 	import starling.utils.RectangleUtil;
 	import starling.utils.ScaleMode;
@@ -30,17 +28,17 @@ package
 		private var _assetManager:AssetManager;
 		
 		private const CONTENT:Array = [
-		   	 { label: "ドラえもん",		data: null ,texture:0}
-			,{ label: "パーマン",     	data: null ,texture:1}
-			,{ label: "オバケのQ太郎", 	data: null ,texture:0}
-			,{ label: "(新)オバケのQ太郎", data: null ,texture:1}
-			,{ label: "怪物君",       	data: null ,texture:0}
-			,{ label: "忍者ハットリ君", 	data: null ,texture:1}
-			,{ label: "キテレツ大百科", 	data: null ,texture:0}
-			,{ label: "プロゴルファー猿",	data: null ,texture:1}
-			,{ label: "エスパー魔美",  	data: null ,texture:0}
-			,{ label: "チンプイ",   		data: null ,texture:1}
-			,{ label: "21エモン",   		data: null ,texture:0}
+		   	 { label: "ドラえもん",		data: null }
+			,{ label: "パーマン",     	data: null }
+			,{ label: "オバケのQ太郎", 	data: null }
+			,{ label: "(新)オバケのQ太郎", data: null }
+			,{ label: "怪物君",       	data: null ,texture:"bg_b_320x64"}
+			,{ label: "忍者ハットリ君", 	data: null ,texture:"bg_b_320x64"}
+			,{ label: "キテレツ大百科", 	data: null }
+			,{ label: "プロゴルファー猿",	data: null ,texture:"bg_b_320x64"}
+			,{ label: "エスパー魔美",  	data: null }
+			,{ label: "チンプイ",   		data: null }
+			,{ label: "21エモン",   		data: null }
 		];
 		
 		public static function main(stage:Stage):void
@@ -96,16 +94,12 @@ package
 		}
 		private function _start():void
 		{
-			const bgTextures:Array = [_assetManager.getTexture("bg_a_320x64"),_assetManager.getTexture("bg_b_320x64")];
-
 			var factory:FlexibleTextureListFactory = new FlexibleTextureListFactory();
 			factory.textFormat = new TextFormat("_sans",24,0x331111,true);
-			factory.textureSelecter = function(data:Object):Texture{
-				return bgTextures[data.texture];
-			}
-			factory.listItemHeight = 80;
 			factory.applyVscrollbarByAssetManager(_assetManager);
 			factory.applyHscrollbarByAssetManager(_assetManager);
+			factory.setTextureSelecterByAssetManager(_assetManager);
+			factory.defaultTexture = _assetManager.getTexture("bg_a_320x64");
 			
 			var list:List = factory.createSimpleList();
 			list.width  = 460;
@@ -119,10 +113,9 @@ package
 		}
 		
 		private function _handleChangeListItem(event:Event):void {
-			
 			var list:List = List(event.currentTarget);
 			var item:Object = list.selectedItem;
-			trace(item.label,item.data);
+			trace("selected:",item.label,item.data);
 		}
 	}
 }
