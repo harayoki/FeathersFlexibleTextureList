@@ -30,7 +30,7 @@ package harayoki.starling.feathers
 		public var textFormat:TextFormat = null;
 		public var bitmapFontTextFormat:BitmapFontTextFormat = null;
 		
-		public var listItemHeight:int = 75;
+		public var listItemHeight:int = 64;
 		
 		public var textureSelecter:Function;
 		

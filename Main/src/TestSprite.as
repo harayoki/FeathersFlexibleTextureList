@@ -98,11 +98,11 @@ package
 		{
 			const SCROLL_BAR_THUMB_REGION1:int = 8;
 			const SCROLL_BAR_THUMB_REGION2:int = 8;
-			var TEXTURE0:Texture = Texture.fromColor(32,32,0xffffcccc);
-			var TEXTURE1:Texture = Texture.fromColor(32,32,0xffccffcc);
+			var TEXTURE0:Texture = _assetManager.getTexture("bg_a_320x64");
+			var TEXTURE1:Texture = _assetManager.getTexture("bg_b_320x64");
 
 			var factory:FlexibleTextureListFactory = new FlexibleTextureListFactory();
-			factory.textFormat = new TextFormat("_sans",28,0x331111,true);
+			factory.textFormat = new TextFormat("_sans",24,0x331111,true);
 			factory.textureSelecter = function(data:Object):Texture{
 				if(data.texture==0)
 				{
@@ -110,12 +110,13 @@ package
 				}
 				return TEXTURE1;
 			}
+			factory.listItemHeight = 2*48;
 			factory.verticalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("vscrollbar"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
-			factory.verticalScrollBarThumbSkinColor = 0x663300;
+			factory.verticalScrollBarThumbSkinColor = 0x669999;
 			factory.horizontalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("hscrollbar"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
 			var list:List = factory.createSimpleList();
-			list.width  = 320;
-			list.height = 480;
+			list.width  = 460;
+			list.height = 620;
 			list.x      = 10;
 			list.y      = 10;
 			list.dataProvider = new ListCollection(CONTENT);

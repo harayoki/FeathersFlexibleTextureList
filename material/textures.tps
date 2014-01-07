@@ -64,7 +64,7 @@
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
-        <uint>2</uint>
+        <uint>4</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
@@ -159,7 +159,7 @@
             <key>scaleMode</key>
             <enum type="ScaleMode">Smooth</enum>
             <key>innerPadding</key>
-            <uint>2</uint>
+            <uint>0</uint>
             <key>extrude</key>
             <uint>0</uint>
             <key>trimThreshold</key>
@@ -173,6 +173,8 @@
         <array>
             <filename>hscrollbar.png</filename>
             <filename>vscrollbar.png</filename>
+            <filename>bg_b_320x64.png</filename>
+            <filename>bg_a_320x64.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
