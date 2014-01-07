@@ -284,7 +284,7 @@ package harayoki.starling.feathers
 				var index:int = _owner.dataProvider.getItemIndex(data);
 				if(textureSelecter != null)
 				{
-					texture = textureSelecter.apply(null,[data,index]) || texture;
+					texture = textureSelecter.apply(null,[data]) || texture;
 				}
 				if(background.texture != texture)
 				{

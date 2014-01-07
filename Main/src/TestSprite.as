@@ -103,16 +103,17 @@ package
 
 			var factory:FlexibleTextureListFactory = new FlexibleTextureListFactory();
 			factory.textFormat = new TextFormat("_sans",28,0x331111,true);
-			factory.verticalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("vertical-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
-			factory.verticalScrollBarThumbSkinColor = 0xffaa99;
-			factory.horizontalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("horizontal-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
-			var list:List = factory.createSimpleList(function(data:Object,index:int):Texture{
+			factory.textureSelecter = function(data:Object):Texture{
 				if(data.texture==0)
 				{
 					return TEXTURE0;
 				}
 				return TEXTURE1;
-			});
+			}
+			factory.verticalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("vertical-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
+			factory.verticalScrollBarThumbSkinColor = 0xffaa99;
+			factory.horizontalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("horizontal-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
+			var list:List = factory.createSimpleList();
 			list.width  = 320;
 			list.height = 480;
 			list.x      = 10;

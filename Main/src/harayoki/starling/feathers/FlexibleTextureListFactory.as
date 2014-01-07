@@ -30,14 +30,16 @@ package harayoki.starling.feathers
 		public var textFormat:TextFormat = null;
 		public var bitmapFontTextFormat:BitmapFontTextFormat = null;
 		
+		public var textureSelecter:Function;
+		
 		public function FlexibleTextureListFactory(scale:Number=1.0)
 		{
 			this.scale = scale;
 		}
 		
-		public function createSimpleList(textureSelecter:Function=null):List
+		public function createSimpleList():List
 		{
-					
+			
 			var list:List = new List();
 			list.horizontalScrollBarFactory = horizontalScrollBarFactory;
 			list.verticalScrollBarFactory = verticalScrollBarFactory;			
