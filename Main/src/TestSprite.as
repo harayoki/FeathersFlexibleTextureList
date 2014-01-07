@@ -4,6 +4,7 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.geom.Rectangle;
+	import flash.text.TextFormat;
 	
 	import feathers.controls.List;
 	import feathers.data.ListCollection;
@@ -101,6 +102,7 @@ package
 			var TEXTURE1:Texture = Texture.fromColor(32,32,0xffccffcc);
 
 			var factory:FlexibleTextureListFactory = new FlexibleTextureListFactory();
+			factory.textFormat = new TextFormat("_sans",28,0x331111,true);
 			factory.verticalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("vertical-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
 			factory.verticalScrollBarThumbSkinColor = 0xffaa99;
 			factory.horizontalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("horizontal-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);

@@ -1,9 +1,12 @@
 package harayoki.starling.feathers
 {
+	import flash.text.TextFormat;
+	
 	import feathers.controls.List;
 	import feathers.controls.SimpleScrollBar;
 	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.display.Scale3Image;
+	import feathers.text.BitmapFontTextFormat;
 	import feathers.textures.Scale3Textures;
 	
 	import starling.display.DisplayObject;
@@ -24,6 +27,9 @@ package harayoki.starling.feathers
 		public var verticalScrollBarThumbSkinTexture:Object;
 		public var verticalScrollBarThumbSkinColor:uint = 0xffffff;
 		
+		public var textFormat:TextFormat = null;
+		public var bitmapFontTextFormat:BitmapFontTextFormat = null;
+		
 		public function FlexibleTextureListFactory(scale:Number=1.0)
 		{
 			this.scale = scale;
@@ -33,7 +39,6 @@ package harayoki.starling.feathers
 		{
 					
 			var list:List = new List();
-			list.nameList.add(FlexibleTextureListItemRenderer.CHILD_NAME_FLEXIBLE_TEXTURE_LIST);
 			list.horizontalScrollBarFactory = horizontalScrollBarFactory;
 			list.verticalScrollBarFactory = verticalScrollBarFactory;			
 						
@@ -45,6 +50,18 @@ package harayoki.starling.feathers
 				renderer.paddingLeft = 44 * scale;
 				renderer.textureSelecter = textureSelecter;
 				renderer.height = 75;
+				
+				if(bitmapFontTextFormat)
+				{
+					renderer.useBitmapFont = true;
+					renderer.bitmapTextFormat = bitmapFontTextFormat;
+				}
+				else
+				{
+					renderer.useBitmapFont = false;
+					renderer.textFormat = textFormat;//nullでもOK
+				}
+				
 				return renderer;
 			};
 			

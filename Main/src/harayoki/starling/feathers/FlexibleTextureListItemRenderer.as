@@ -1,13 +1,16 @@
 package harayoki.starling.feathers
 {
+	import flash.display.Bitmap;
 	import flash.text.TextFormat;
 	
 	import feathers.controls.Label;
 	import feathers.controls.List;
 	import feathers.controls.renderers.IListItemRenderer;
+	import feathers.controls.text.BitmapFontTextRenderer;
 	import feathers.controls.text.TextFieldTextRenderer;
 	import feathers.core.FeathersControl;
 	import feathers.core.ITextRenderer;
+	import feathers.text.BitmapFontTextFormat;
 	
 	import starling.display.Image;
 	import starling.events.Event;
@@ -15,16 +18,22 @@ package harayoki.starling.feathers
 	
 	public class FlexibleTextureListItemRenderer extends FeathersControl implements IListItemRenderer
 	{
-		public static const CHILD_NAME_FLEXIBLE_TEXTURE_LIST:String = "flexibleTextureList";
-		protected static var DEFAULT_TEXTURE:Texture;
+		protected static var DEFAULT_TEXTURE:Texture;//ここでnewするとStage3Dが準備できていないのでエラーになります
+		protected static const DEFAULT_TEXT_FORMAT:TextFormat = new TextFormat("_sans",24,0x111111);
 		
 		public var textureSelecter:Function;
 		public var defaultTexture:Texture;
 		
+		public var useBitmapFont:Boolean = false;
+		public var textFormat:TextFormat;
+		public var bitmapTextFormat:BitmapFontTextFormat;
+		
 		public function FlexibleTextureListItemRenderer()
 		{
-			if(!DEFAULT_TEXTURE) DEFAULT_TEXTURE = Texture.fromColor(100,100,0xffffffff);
-			defaultTexture = DEFAULT_TEXTURE;
+			if(!DEFAULT_TEXTURE)
+			{
+				DEFAULT_TEXTURE = Texture.fromColor(32,32,0xffffffff);
+			}
 		}
 		
 		protected var _data:Object;	
@@ -199,6 +208,9 @@ package harayoki.starling.feathers
 		
 		override protected function initialize():void
 		{
+			var defaultTexture:Texture = this.defaultTexture ? this.defaultTexture : DEFAULT_TEXTURE;;
+			var textFormat:TextFormat = this.textFormat ? this.textFormat : DEFAULT_TEXT_FORMAT;
+			
 			background = new Image(defaultTexture);
 			background.alpha = 1.0;
 			addChild(this.background);
@@ -206,9 +218,16 @@ package harayoki.starling.feathers
 			label = new Label();
 			label.textRendererFactory = function():ITextRenderer
 			{
-				return new TextFieldTextRenderer();
+				if(useBitmapFont)
+				{
+					return new BitmapFontTextRenderer();
+				}
+				else
+				{
+					return new TextFieldTextRenderer();
+				}
 			}
-			label.textRendererProperties.textFormat = new TextFormat("_sans",24,0x111111);
+			label.textRendererProperties.textFormat = useBitmapFont ? bitmapTextFormat : textFormat;
 			addChild(label);
 			
 		}
@@ -271,8 +290,6 @@ package harayoki.starling.feathers
 				{
 					background.texture = texture;
 				}
-				//this.icon.source = _isSelected ? this._firstSelectedIconTexture : this._firstNormalIconTexture;
-				//background.color = _index % 2 == 0 ? 0xffcccc : 0xccffcc;
 			}
 			else
 			{
