@@ -34,6 +34,11 @@ package harayoki.starling.feathers
 		
 		public var defaultBackgroundTexture:Texture;
 		
+		public var cneterizeLabel:Boolean;
+		public var normalColor:uint = 0xffffff;
+		public var touchColor:uint = 0xcccccc;
+		public var selectColor:uint = 0xaaaaaa;
+		
 		public var backgroundSelecter:Function;
 		
 		public function FlexibleTextureListFactory(scale:Number=1.0)
@@ -72,6 +77,7 @@ package harayoki.starling.feathers
 				renderer.paddingLeft = 44 * _scale;
 				renderer.backgroundSelecter = backgroundSelecter;
 				renderer.height = listItemHeight;
+				renderer.cneterizeLabel = cneterizeLabel;
 				
 				if(bitmapFontTextFormat)
 				{
@@ -102,22 +108,36 @@ package harayoki.starling.feathers
 		
 		public function setTextureSelecterByAssetManager(_assetManager:AssetManager,dataName:String="texture"):void
 		{
-			backgroundSelecter = function(list:List,data:Object):DisplayObject{
+			backgroundSelecter = function(list:List,data:Object,info:FlexibleTextureListItemInfo):DisplayObject{
 				var flexList:FlexibleTextureList = FlexibleTextureList(list);
 				var img:Image = flexList._autoCreatedImages[data];
 				var texture:Texture;
-				if(img) return img;
-				var textureName:String = data[dataName];
-				if(textureName) 
+				if(!img)
 				{
-					texture = _assetManager.getTexture(textureName);					
+					var textureName:String = data[dataName];
+					if(textureName) 
+					{
+						texture = _assetManager.getTexture(textureName);					
+					}
+					else
+					{
+						texture = defaultBackgroundTexture;
+					}
+					if(!texture) return null;
+					img = flexList._autoCreatedImages[data] = new Image(texture);
+				}
+				if(info.touching)
+				{
+					img.color = touchColor;
+				}
+				else if(info.selected)
+				{
+					img.color = selectColor;
 				}
 				else
 				{
-					texture = defaultBackgroundTexture;
+					img.color = normalColor;
 				}
-				if(!texture) return null;
-				img = flexList._autoCreatedImages[data] = new Image(texture);
 				//trace(data["label"],img);
 				return img;
 			}

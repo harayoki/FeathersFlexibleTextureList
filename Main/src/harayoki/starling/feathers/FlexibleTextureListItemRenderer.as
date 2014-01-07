@@ -1,5 +1,6 @@
 package harayoki.starling.feathers
 {
+	import flash.geom.Point;
 	import flash.text.TextFormat;
 	
 	import feathers.controls.Label;
@@ -14,37 +15,53 @@ package harayoki.starling.feathers
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	
 	public class FlexibleTextureListItemRenderer extends FeathersControl implements IListItemRenderer
 	{
 		protected static var DEFAULT_TEXTURE:Texture;//ここでnewするとStage3Dが準備できていないのでエラーになります
 		protected static const DEFAULT_TEXT_FORMAT:TextFormat = new TextFormat("_sans",24,0x111111);
+		private static const HELPER_POINT:Point = new Point();
+		private static const HELPER_TOUCHES_VECTOR:Vector.<Touch> = new <Touch>[];
+		
+		protected var _touchPointID:int = -1;
+		protected var _info:FlexibleTextureListItemInfo;
 		
 		public var backgroundSelecter:Function;
 		
 		public var useBitmapFont:Boolean = false;
 		public var textFormat:TextFormat;
 		public var bitmapTextFormat:BitmapFontTextFormat;
+		public var cneterizeLabel:Boolean = false;
 		
 		public function FlexibleTextureListItemRenderer()
 		{
 			//このインスタンスはリストのアイテム数分だけ作成されます
-			
 			if(!DEFAULT_TEXTURE)
 			{
 				DEFAULT_TEXTURE = Texture.fromColor(32,32,0xff555555);
 			}
+			_info = new FlexibleTextureListItemInfo();
+			addEventListener(TouchEvent.TOUCH, touchHandler);			
 		}
 		
 		public override function dispose():void
 		{
 			//list.dispose()時に呼ばれます
+			removeEventListener(TouchEvent.TOUCH, touchHandler);			
 			_data = null;
 			backgroundSelecter = null;
 			textFormat = null;
 			bitmapTextFormat = null;
+			if(_owner)
+			{
+				_owner.removeEventListener(Event.SCROLL, owner_scrollHandler);
+			}
 			_owner = null;
+			_info = null;
 			super.dispose();
 		}
 		
@@ -94,8 +111,90 @@ package harayoki.starling.feathers
 			{
 				return;
 			}
+			if(_owner)
+			{
+				_owner.removeEventListener(Event.SCROLL, owner_scrollHandler);
+			}
+			_owner = value;
+			if(_owner)
+			{
+				_owner.addEventListener(Event.SCROLL, owner_scrollHandler);
+			}			
 			_owner = value;
 			invalidate(INVALIDATION_FLAG_DATA);
+		}
+		
+		protected function touchHandler(event:TouchEvent):void
+		{
+			var isInBounds:Boolean;
+			
+			if(!this._isEnabled)
+			{
+				return;
+			}
+			
+			const touches:Vector.<Touch> = event.getTouches(this, null, HELPER_TOUCHES_VECTOR);
+			if(touches.length == 0)
+			{
+				return;
+			}
+			if(this._touchPointID >= 0)
+			{
+				var touch:Touch;
+				for each(var currentTouch:Touch in touches)
+				{
+					if(currentTouch.id == this._touchPointID)
+					{
+						touch = currentTouch;
+						break;
+					}
+				}
+				
+				if(!touch)
+				{
+					HELPER_TOUCHES_VECTOR.length = 0;
+					return;
+				}
+				
+				if(touch.phase == TouchPhase.ENDED)
+				{
+					this._touchPointID = -1;
+					this.isTouching = false;
+					touch.getLocation(this, HELPER_POINT);
+					isInBounds = this.hitTest(HELPER_POINT, true) != null;
+					if(isInBounds)
+					{
+						if(!this._isSelected)
+						{
+							this.isSelected = true;
+						}
+					}
+				}
+			}
+			else
+			{
+				for each(touch in touches)
+				{
+					if(touch.phase == TouchPhase.BEGAN)
+					{
+						this._touchPointID = touch.id;
+						touch.getLocation(this, HELPER_POINT);
+						isInBounds = this.hitTest(HELPER_POINT, true) != null;
+						if(isInBounds)
+						{
+							this.isTouching = true;
+						}
+						break;
+					}
+				}
+			}
+			HELPER_TOUCHES_VECTOR.length = 0;
+		}		
+		
+		protected function owner_scrollHandler(event:Event):void
+		{
+			this._touchPointID = -1;
+			this.isTouching = false;
 		}
 		
 		//////////
@@ -116,6 +215,25 @@ package harayoki.starling.feathers
 			this._isSelected = value;
 			this.invalidate(INVALIDATION_FLAG_SELECTED);
 			this.dispatchEventWith(Event.CHANGE);
+		}
+		
+		//////////
+		
+		protected var _isTouching:Boolean = false;
+		
+		public function get isTouching():Boolean
+		{
+			return _isTouching;
+		}
+		
+		public function set isTouching(value:Boolean):void
+		{
+			if(_isTouching == value)
+			{
+				return;
+			}
+			this._isTouching = value;
+			this.invalidate(INVALIDATION_FLAG_SELECTED);
 		}
 		
 		//////////
@@ -290,7 +408,9 @@ package harayoki.starling.feathers
 				var newBackground:DisplayObject;
 				if(backgroundSelecter != null)
 				{
-					newBackground = backgroundSelecter.apply(null,[_owner,data]);
+					_info.touching = _isTouching;
+					_info.selected = _isSelected;
+					newBackground = backgroundSelecter.apply(null,[_owner,data,_info]);
 				}
 				if(background == null && newBackground == null)
 				{
@@ -310,6 +430,7 @@ package harayoki.starling.feathers
 						background = newBackground;
 					}
 				}
+				
 			}
 			else
 			{
@@ -328,13 +449,13 @@ package harayoki.starling.feathers
 			
 			label.validate();
 			
-			if(_isSelected)
+			if(cneterizeLabel)
 			{
-				label.x = leftMarginWidth;
+				label.x = leftMarginWidth + (availableLabelWidth - label.width) / 2;
 			}
 			else
 			{
-				label.x = leftMarginWidth + (availableLabelWidth - label.width) / 2;
+				label.x = leftMarginWidth;
 			}
 			label.y = (availableLabelHeight - this.label.height) / 2;
 		}

@@ -100,6 +100,7 @@ package
 			factory.applyVscrollbarByAssetManager(_assetManager);
 			factory.applyHscrollbarByAssetManager(_assetManager);
 			factory.setTextureSelecterByAssetManager(_assetManager);
+			factory.selectColor = 0xffcccc;
 			factory.defaultBackgroundTexture = _assetManager.getTexture("bg_a_320x64");
 			
 			var list:List = factory.createSimpleList();
@@ -123,7 +124,7 @@ package
 		private function _handleChangeListItem(event:Event):void {
 			var list:List = List(event.currentTarget);
 			var item:Object = list.selectedItem;
-			trace("selected:",item.label,item.data);
+			trace("selected:",item.label);
 		}
 	}
 }
