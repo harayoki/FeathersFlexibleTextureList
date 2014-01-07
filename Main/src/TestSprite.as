@@ -28,19 +28,19 @@ package
 		private static var _flashStage:Stage;
 		
 		private var _assetManager:AssetManager;
-		private var TEXTURE_NUM0:int = 0;
-		private var TEXTURE_NUM1:int = 1;
 		
 		private const CONTENT:Array = [
-		   	 { label: "ドラえもん",		data: null ,texture:TEXTURE_NUM0}
-			,{ label: "パーマン",     	data: null ,texture:TEXTURE_NUM1}
-			,{ label: "オバケのQ太郎", 	data: null ,texture:TEXTURE_NUM0}
-			,{ label: "怪物君",       	data: null ,texture:TEXTURE_NUM1}
-			,{ label: "忍者ハットリ君", 	data: null ,texture:TEXTURE_NUM0}
-			,{ label: "キテレツ大百科", 	data: null ,texture:TEXTURE_NUM1}
-			,{ label: "プロゴルファー猿",	data: null ,texture:TEXTURE_NUM0}
-			,{ label: "エスパー魔美",  	data: null ,texture:TEXTURE_NUM1}
-			,{ label: "チンプイ",   		data: null ,texture:TEXTURE_NUM0}
+		   	 { label: "ドラえもん",		data: null ,texture:0}
+			,{ label: "パーマン",     	data: null ,texture:1}
+			,{ label: "オバケのQ太郎", 	data: null ,texture:0}
+			,{ label: "(新)オバケのQ太郎", data: null ,texture:1}
+			,{ label: "怪物君",       	data: null ,texture:0}
+			,{ label: "忍者ハットリ君", 	data: null ,texture:1}
+			,{ label: "キテレツ大百科", 	data: null ,texture:0}
+			,{ label: "プロゴルファー猿",	data: null ,texture:1}
+			,{ label: "エスパー魔美",  	data: null ,texture:0}
+			,{ label: "チンプイ",   		data: null ,texture:1}
+			,{ label: "21エモン",   		data: null ,texture:0}
 		];
 		
 		public static function main(stage:Stage):void
@@ -96,24 +96,17 @@ package
 		}
 		private function _start():void
 		{
-			const SCROLL_BAR_THUMB_REGION1:int = 8;
-			const SCROLL_BAR_THUMB_REGION2:int = 8;
-			var TEXTURE0:Texture = _assetManager.getTexture("bg_a_320x64");
-			var TEXTURE1:Texture = _assetManager.getTexture("bg_b_320x64");
+			const bgTextures:Array = [_assetManager.getTexture("bg_a_320x64"),_assetManager.getTexture("bg_b_320x64")];
 
 			var factory:FlexibleTextureListFactory = new FlexibleTextureListFactory();
 			factory.textFormat = new TextFormat("_sans",24,0x331111,true);
 			factory.textureSelecter = function(data:Object):Texture{
-				if(data.texture==0)
-				{
-					return TEXTURE0;
-				}
-				return TEXTURE1;
+				return bgTextures[data.texture];
 			}
-			factory.listItemHeight = 2*48;
-			factory.verticalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("vscrollbar"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
-			factory.verticalScrollBarThumbSkinColor = 0x669999;
-			factory.horizontalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("hscrollbar"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
+			factory.listItemHeight = 80;
+			factory.applyVscrollbarByAssetManager(_assetManager);
+			factory.applyHscrollbarByAssetManager(_assetManager);
+			
 			var list:List = factory.createSimpleList();
 			list.width  = 460;
 			list.height = 620;

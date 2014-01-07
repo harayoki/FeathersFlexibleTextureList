@@ -13,6 +13,7 @@ package harayoki.starling.feathers
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.textures.Texture;
+	import starling.utils.AssetManager;
 
 	public class FlexibleTextureListFactory
 	{
@@ -20,12 +21,12 @@ package harayoki.starling.feathers
 		protected var scale:Number = 1.0;
 		
 		//Scale3Image or DisplayObject
-		public var horizontalScrollBarThumbSkinTexture:Object;
-		public var horizontalScrollBarThumbSkinColor:uint = 0xffffff;
+		public var hScrollBarThumbSkinTexture:Object;
+		public var hScrollBarThumbSkinColor:uint = 0xffffff;
 		
 		//Scale3Image or DisplayObject
-		public var verticalScrollBarThumbSkinTexture:Object;
-		public var verticalScrollBarThumbSkinColor:uint = 0xffffff;
+		public var vScrollBarThumbSkinTexture:Object;
+		public var vScrollBarThumbSkinColor:uint = 0xffffff;
 		
 		public var textFormat:TextFormat = null;
 		public var bitmapFontTextFormat:BitmapFontTextFormat = null;
@@ -72,18 +73,28 @@ package harayoki.starling.feathers
 			return list;
 		}
 		
+		public function applyVscrollbarByAssetManager(assetmanager:AssetManager,textureName:String="vscrollbar",region1:int=8,region2:int=8):void
+		{
+			vScrollBarThumbSkinTexture = new Scale3Textures(assetmanager.getTexture(textureName),region1,region2,Scale3Textures.DIRECTION_VERTICAL);
+		}
+		
+		public function applyHscrollbarByAssetManager(assetmanager:AssetManager,textureName:String="hscrollbar",region1:int=8,region2:int=8):void
+		{
+			hScrollBarThumbSkinTexture = new Scale3Textures(assetmanager.getTexture(textureName),region1,region2,Scale3Textures.DIRECTION_HORIZONTAL);
+		}
+		
 		protected function horizontalScrollBarFactory():SimpleScrollBar
 		{
 			const scrollBar:SimpleScrollBar = new SimpleScrollBar();
 			scrollBar.direction = SimpleScrollBar.DIRECTION_HORIZONTAL;
 			var defaultSkin:DisplayObject;
-			if(horizontalScrollBarThumbSkinTexture is Scale3Textures)
+			if(hScrollBarThumbSkinTexture is Scale3Textures)
 			{
-				defaultSkin = new Scale3Image(Scale3Textures(horizontalScrollBarThumbSkinTexture), scale);
+				defaultSkin = new Scale3Image(Scale3Textures(hScrollBarThumbSkinTexture), scale);
 			}
-			else if(horizontalScrollBarThumbSkinTexture is Texture)
+			else if(hScrollBarThumbSkinTexture is Texture)
 			{
-				defaultSkin = new Image(Texture(horizontalScrollBarThumbSkinTexture));
+				defaultSkin = new Image(Texture(hScrollBarThumbSkinTexture));
 			}
 			else
 			{
@@ -92,7 +103,7 @@ package harayoki.starling.feathers
 			}
 			if(defaultSkin.hasOwnProperty("color"))
 			{
-				defaultSkin["color"] = horizontalScrollBarThumbSkinColor;
+				defaultSkin["color"] = hScrollBarThumbSkinColor;
 			}
 
 			defaultSkin.width = 10 * scale;
@@ -106,13 +117,13 @@ package harayoki.starling.feathers
 			const scrollBar:SimpleScrollBar = new SimpleScrollBar();
 			scrollBar.direction = SimpleScrollBar.DIRECTION_VERTICAL;
 			var defaultSkin:DisplayObject;
-			if(verticalScrollBarThumbSkinTexture is Scale3Textures)
+			if(vScrollBarThumbSkinTexture is Scale3Textures)
 			{
-				defaultSkin = new Scale3Image(Scale3Textures(verticalScrollBarThumbSkinTexture), scale);
+				defaultSkin = new Scale3Image(Scale3Textures(vScrollBarThumbSkinTexture), scale);
 			}
-			else if(verticalScrollBarThumbSkinTexture is Texture)
+			else if(vScrollBarThumbSkinTexture is Texture)
 			{
-				defaultSkin = new Image(Texture(verticalScrollBarThumbSkinTexture));
+				defaultSkin = new Image(Texture(vScrollBarThumbSkinTexture));
 			}
 			else
 			{
@@ -121,7 +132,7 @@ package harayoki.starling.feathers
 			}
 			if(defaultSkin.hasOwnProperty("color"))
 			{
-				defaultSkin["color"] = verticalScrollBarThumbSkinColor;
+				defaultSkin["color"] = vScrollBarThumbSkinColor;
 			}
 			
 			defaultSkin.height = 10 * scale;

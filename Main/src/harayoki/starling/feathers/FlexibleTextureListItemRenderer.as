@@ -32,7 +32,7 @@ package harayoki.starling.feathers
 		{
 			if(!DEFAULT_TEXTURE)
 			{
-				DEFAULT_TEXTURE = Texture.fromColor(32,32,0xffffffff);
+				DEFAULT_TEXTURE = Texture.fromColor(32,32,0xff111111);
 			}
 		}
 		
@@ -208,7 +208,7 @@ package harayoki.starling.feathers
 		
 		override protected function initialize():void
 		{
-			var defaultTexture:Texture = this.defaultTexture ? this.defaultTexture : DEFAULT_TEXTURE;;
+			defaultTexture = defaultTexture ? defaultTexture : DEFAULT_TEXTURE;;
 			var textFormat:TextFormat = this.textFormat ? this.textFormat : DEFAULT_TEXT_FORMAT;
 			
 			background = new Image(defaultTexture);
