@@ -154,6 +154,12 @@ package
 			//※itemRendererPropertiesの対応は現在この２つ(labelFieldとlabelFunction)のみになっています
 			//factoryに設定している各プロパティも、itemRendererPropertiesで設定できるようにするかもしれませんし
 			//いくつかは設定可能ですが、とりあえず使用しないでください
+			
+			/* 公式wiki引用 データの受け渡し方はCustom item renderers作者の自由 
+			Custom item renderers may not have the same labelField, iconSourceField, or other similar properties that the default item renderer offers.
+			If you are creating a custom item renderer, you can design it to interpret an item's data any way that you prefer.
+			If you're using a custom item renderer created by someone else, check its documentation for complete details about how your data provider should be structured.
+			*/
 				
 			list.dataProvider = new ListCollection(CONTENT);
 			addChild(list);
