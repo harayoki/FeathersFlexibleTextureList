@@ -85,8 +85,8 @@ package
 		{
 			_assetManager = new AssetManager();
 			_assetManager.verbose = true;
-			_assetManager.enqueue("traintimes.png");
-			_assetManager.enqueue("traintimes.xml");
+			_assetManager.enqueue("textures.png");
+			_assetManager.enqueue("textures.xml");
 			_assetManager.loadQueue(function(num:Number):void{
 				if(num==1.0)
 				{
@@ -96,8 +96,8 @@ package
 		}
 		private function _start():void
 		{
-			const SCROLL_BAR_THUMB_REGION1:int = 5;
-			const SCROLL_BAR_THUMB_REGION2:int = 14;
+			const SCROLL_BAR_THUMB_REGION1:int = 8;
+			const SCROLL_BAR_THUMB_REGION2:int = 8;
 			var TEXTURE0:Texture = Texture.fromColor(32,32,0xffffcccc);
 			var TEXTURE1:Texture = Texture.fromColor(32,32,0xffccffcc);
 
@@ -110,9 +110,9 @@ package
 				}
 				return TEXTURE1;
 			}
-			factory.verticalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("vertical-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
-			factory.verticalScrollBarThumbSkinColor = 0xffaa99;
-			factory.horizontalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("horizontal-scroll-bar-thumb-skin"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
+			factory.verticalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("vscrollbar"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
+			factory.verticalScrollBarThumbSkinColor = 0x663300;
+			factory.horizontalScrollBarThumbSkinTexture = new Scale3Textures(_assetManager.getTexture("hscrollbar"),SCROLL_BAR_THUMB_REGION1,SCROLL_BAR_THUMB_REGION2,Scale3Textures.DIRECTION_VERTICAL);
 			var list:List = factory.createSimpleList();
 			list.width  = 320;
 			list.height = 480;

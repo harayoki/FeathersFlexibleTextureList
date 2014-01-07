@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:f62fdbba0141c0a1e38b1f1b16bb8df4:511e906f52dd86f986ef84f86e3cdb9d:2a288f7160b778d75d6fb3a0e2108afb$ -->
+<TextureAtlas imagePath="textures.png">
+    <SubTexture name="hscrollbar" x="2" y="2" width="68" height="20"/>
+    <SubTexture name="vscrollbar" x="72" y="2" width="20" height="68"/>
+</TextureAtlas>

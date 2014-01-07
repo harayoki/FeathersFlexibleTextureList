@@ -30,6 +30,8 @@ package harayoki.starling.feathers
 		public var textFormat:TextFormat = null;
 		public var bitmapFontTextFormat:BitmapFontTextFormat = null;
 		
+		public var listItemHeight:int = 75;
+		
 		public var textureSelecter:Function;
 		
 		public function FlexibleTextureListFactory(scale:Number=1.0)
@@ -51,7 +53,7 @@ package harayoki.starling.feathers
 				renderer.paddingBottom = 0 * scale;
 				renderer.paddingLeft = 44 * scale;
 				renderer.textureSelecter = textureSelecter;
-				renderer.height = 75;
+				renderer.height = listItemHeight;
 				
 				if(bitmapFontTextFormat)
 				{
