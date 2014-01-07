@@ -124,6 +124,7 @@ package harayoki.starling.feathers
 			
 			var onDispose:Function = function():void
 			{
+				//何か廃棄処理があればここに
 			}
 			
 			list = new FlexibleTextureList(onDispose);

@@ -318,17 +318,85 @@ package harayoki.starling.feathers
 		
 		public function get gap():Number
 		{
-			return this._gap;
+			return _gap;
 		}
 		
 		public function set gap(value:Number):void
 		{
-			if(this._gap == value)
+			if(_gap == value)
 			{
 				return;
 			}
-			this._gap = value;
-			this.invalidate(INVALIDATION_FLAG_STYLES);
+			_gap = value;
+			invalidate(INVALIDATION_FLAG_STYLES);
+		}
+		
+		//////////
+		
+		protected var _labelField:String = "label";
+		
+		public function get labelField():String
+		{
+			return _labelField;
+		}
+
+		public function set labelField(value:String):void
+		{
+			if(_labelField == value)
+			{
+				return;
+			}
+			_labelField = value;
+			invalidate(INVALIDATION_FLAG_DATA);
+		}
+		//////////
+		
+		protected var _labelFunction:Function;
+		
+		public function get labelFunction():Function
+		{
+			return _labelFunction;
+		}
+		
+		public function set labelFunction(value:Function):void
+		{
+			if(_labelFunction == value)
+			{
+				return;
+			}
+			_labelFunction = value;
+			invalidate(INVALIDATION_FLAG_DATA);
+		}
+		
+		public function itemToLabel(item:Object):String
+		{
+			if(_labelFunction != null)
+			{
+				var labelResult:Object = _labelFunction(item);
+				if(labelResult is String)
+				{
+					return labelResult as String;
+				}
+				return labelResult.toString();
+			}
+			else if(_labelField != null && item && item.hasOwnProperty(_labelField))
+			{
+				labelResult = item[_labelField];
+				if(labelResult is String)
+				{
+					return labelResult as String;
+				}
+				return labelResult.toString();
+			}
+			else if(item is String)
+			{
+				return item as String;
+			}
+			else if(item)
+			{
+				return item.toString();
+			}
+			return "";
 		}
 		
 		//////////
@@ -402,7 +470,7 @@ package harayoki.starling.feathers
 		{
 			if(_owner)
 			{
-				label.text = data.label;
+				label.text = itemToLabel(data);
 				
 				var index:int = _owner.dataProvider.getItemIndex(data);
 				var newBackground:DisplayObject;

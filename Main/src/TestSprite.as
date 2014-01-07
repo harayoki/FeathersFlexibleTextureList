@@ -141,6 +141,20 @@ package
 			list.height = 620;
 			list.x      = 10;
 			list.y      = 10;
+			
+			//(任意の処理) labelFieldの指定例
+			//list.itemRendererProperties.labelField = "label";
+			
+			//(任意の処理) labelFunctionの指定例
+			//list.itemRendererProperties.labelFunction = function(data:Object):String
+			//{
+			//	return data.label + " 大好き!";
+			//}
+			
+			//※itemRendererPropertiesの対応は現在この２つ(labelFieldとlabelFunction)のみになっています
+			//factoryに設定している各プロパティも、itemRendererPropertiesで設定できるようにするかもしれませんし
+			//いくつかは設定可能ですが、とりあえず使用しないでください
+				
 			list.dataProvider = new ListCollection(CONTENT);
 			addChild(list);
 			
